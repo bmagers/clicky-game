@@ -25,19 +25,19 @@ class Board extends React.Component {
   render() {
     return (
       <div>
-        <div className="row">
+        <div>
           {this.renderMuppetButton(0)}
           {this.renderMuppetButton(1)}
           {this.renderMuppetButton(2)}
           {this.renderMuppetButton(3)}
         </div>
-        <div className="row">
+        <div>
           {this.renderMuppetButton(4)}
           {this.renderMuppetButton(5)}
           {this.renderMuppetButton(6)}
           {this.renderMuppetButton(7)}
         </div>
-        <div className="row">
+        <div>
           {this.renderMuppetButton(8)}
           {this.renderMuppetButton(9)}
           {this.renderMuppetButton(10)}
@@ -52,17 +52,53 @@ class Game extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      shuffledMuppets: shuffle(muppets)
+      shuffledMuppets: shuffle(muppets),
+      score: 0,
+      topscore: 0,
+      clickedMuppets: [],
+      message: "Clicky Game"
     }
   }
 
   handleClick(muppet) {
-    console.log(muppet + " clicked.");
-    this.setState({ shuffledMuppets: shuffle(muppets) });
+    let { score, topscore, clickedMuppets } = this.state;
+    if (clickedMuppets.includes(muppet)) {
+      score = 0;
+      this.setState({
+        score: 0,
+        clickedMuppets: [],
+        message: "You guessed incorrectly! Start over."
+      });
+    } else {
+      score++;
+      topscore = score > topscore ? score : topscore;
+      let message = "You guessed correctly!";
+      clickedMuppets = clickedMuppets.concat([muppet]);
+      if (score === 12) {
+        score = 0;
+        clickedMuppets = [];
+        message = "Awesome! You got them all!";
+      }
+      this.setState({ 
+        shuffledMuppets: shuffle(muppets),
+        score: score,
+        topscore: topscore,
+        clickedMuppets: clickedMuppets,
+        message: message
+      });
+    }
   }
 
   render() {
-    return <Board muppets={this.state.shuffledMuppets} onClick={(muppet) => this.handleClick(muppet)} />
+    const { message, score, topscore, shuffledMuppets } = this.state;
+    return (
+      <div>
+        <h2>Click an image to earn a point, but don't click any more than once.</h2>
+        <h1>{message}</h1>
+        <h1>Score: {score} &nbsp;&nbsp; Top Score: {topscore}</h1>
+        <Board muppets={shuffledMuppets} onClick={(muppet) => this.handleClick(muppet)} />
+      </div>
+    );
   }
 }
 
