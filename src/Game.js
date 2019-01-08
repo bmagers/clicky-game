@@ -1,6 +1,5 @@
 import React from "react";
 
-// create and shuffle array of muppets
 const muppets = ["animal", "beaker", "fozzie", "gonzo", "kermit", "miss-piggy", "rizzo", "rowlf", "sam-eagle", "scooter", "statler-and-waldorf", "swedish-chef"];
 
 function shuffle(array) {
@@ -11,39 +10,38 @@ function shuffle(array) {
   return array;
 }
 
-let shuffledMuppets = shuffle(muppets);
-
-function ImageButton(props) {
-  const imgUrl = "images/" + shuffledMuppets[props.value] + ".jpg";
-  return <button><img src={imgUrl} alt="" onClick={props.onClick} /></button>
+function MuppetButton(props) {
+  const muppetName = props.muppets[props.name];
+  const imgUrl = "images/" + muppetName + ".jpg";
+  return <button><img src={imgUrl} alt={muppetName} onClick={props.onClick} /></button>
 }
 
 class Board extends React.Component {
 
-  populateImage(i) {
-    return <ImageButton value={i} onClick={() => this.props.onClick(shuffledMuppets[i])} />
+  renderMuppetButton(muppet) {
+    return <MuppetButton muppets={this.props.muppets} name={muppet} onClick={() => this.props.onClick(this.props.muppets[muppet])} />
   }
 
   render() {
     return (
       <div>
-        <div id="row1" className="row">
-          {this.populateImage(0)}
-          {this.populateImage(1)}
-          {this.populateImage(2)}
-          {this.populateImage(3)}
+        <div className="row">
+          {this.renderMuppetButton(0)}
+          {this.renderMuppetButton(1)}
+          {this.renderMuppetButton(2)}
+          {this.renderMuppetButton(3)}
         </div>
-        <div id="row2" className="row">
-          {this.populateImage(4)}
-          {this.populateImage(5)}
-          {this.populateImage(6)}
-          {this.populateImage(7)}
+        <div className="row">
+          {this.renderMuppetButton(4)}
+          {this.renderMuppetButton(5)}
+          {this.renderMuppetButton(6)}
+          {this.renderMuppetButton(7)}
         </div>
-        <div id="row3" className="row">
-          {this.populateImage(8)}
-          {this.populateImage(9)}
-          {this.populateImage(10)}
-          {this.populateImage(11)}
+        <div className="row">
+          {this.renderMuppetButton(8)}
+          {this.renderMuppetButton(9)}
+          {this.renderMuppetButton(10)}
+          {this.renderMuppetButton(11)}
         </div>
       </div>
     );
@@ -54,20 +52,17 @@ class Game extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      stateMuppets: shuffledMuppets
+      shuffledMuppets: shuffle(muppets)
     }
   }
 
-  handleClick(i) {
-    console.log(i + " clicked.");
-    this.setState({ stateMuppets: shuffledMuppets });
-    console.log("-------");
-    console.log(this.state.stateMuppets);
-    shuffledMuppets = shuffle(muppets);
+  handleClick(muppet) {
+    console.log(muppet + " clicked.");
+    this.setState({ shuffledMuppets: shuffle(muppets) });
   }
 
   render() {
-    return <Board onClick={(i) => this.handleClick(i)} />
+    return <Board muppets={this.state.shuffledMuppets} onClick={(muppet) => this.handleClick(muppet)} />
   }
 }
 
