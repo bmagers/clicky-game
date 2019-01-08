@@ -11,15 +11,15 @@ function shuffle(array) {
 }
 
 function MuppetButton(props) {
-  const muppetName = props.muppets[props.name];
-  const imgUrl = "images/" + muppetName + ".jpg";
-  return <button><img src={imgUrl} alt={muppetName} onClick={props.onClick} /></button>
+  const imgUrl = "images/" + props.name + ".jpg";
+  return <button><img src={imgUrl} alt={props.name} onClick={props.onClick} /></button>
 }
 
 class Board extends React.Component {
 
   renderMuppetButton(muppet) {
-    return <MuppetButton muppets={this.props.muppets} name={muppet} onClick={() => this.props.onClick(this.props.muppets[muppet])} />
+    const name = this.props.muppets[muppet];
+    return <MuppetButton name={name} onClick={() => this.props.onClick(name)} />
   }
 
   render() {
